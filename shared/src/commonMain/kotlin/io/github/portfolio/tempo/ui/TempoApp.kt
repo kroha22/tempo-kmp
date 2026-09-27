@@ -24,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -259,21 +260,28 @@ private fun LessonScreen(
             }
         }
         item {
-            Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF173F31)), shape = RoundedCornerShape(22.dp)) {
+            Card(colors = CardDefaults.cardColors(containerColor = Color(0xFFE4F2EB)), shape = RoundedCornerShape(22.dp)) {
                 Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("ПРОВЕРЬ СЕБЯ", color = Sun, fontSize = 11.sp, fontWeight = FontWeight.Black)
-                    Text(lesson.question, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("ПРОВЕРЬ СЕБЯ", color = Green, fontSize = 11.sp, fontWeight = FontWeight.Black)
+                    Text(lesson.question, color = Ink, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     lesson.options.forEachIndexed { index, option ->
                         FilterChip(
+                            modifier = Modifier.fillMaxWidth(),
                             selected = selectedOption == index,
                             onClick = { selectedOption = index },
                             label = { Text(option) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = Color.White,
+                                labelColor = Ink,
+                                selectedContainerColor = Green,
+                                selectedLabelColor = Color.White,
+                            ),
                         )
                     }
                     if (selectedOption >= 0) {
                         Text(
                             if (selectedOption == lesson.correctOption) "Верно — можно завершить урок." else "Попробуй ещё раз.",
-                            color = if (selectedOption == lesson.correctOption) Color(0xFFA9E4B8) else Color(0xFFFFC2B6),
+                            color = if (selectedOption == lesson.correctOption) Green else Color(0xFF9B332C),
                             fontWeight = FontWeight.Bold,
                         )
                     }
