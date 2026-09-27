@@ -1,4 +1,4 @@
-package io.github.portfolio.tempo.ui
+package io.github.kroha22.tempo.ui
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography

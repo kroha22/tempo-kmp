@@ -11,11 +11,11 @@ dependencies {
 }
 
 android {
-    namespace = "io.github.portfolio.tempo"
+    namespace = "io.github.kroha22.tempo"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "io.github.portfolio.tempo"
+        applicationId = "io.github.kroha22.tempo"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

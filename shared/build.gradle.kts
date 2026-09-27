@@ -19,7 +19,7 @@ kotlin {
     wasmJs { browser() }
 
     androidLibrary {
-        namespace = "io.github.portfolio.tempo.shared"
+        namespace = "io.github.kroha22.tempo.shared"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         compilerOptions.jvmTarget = JvmTarget.JVM_11

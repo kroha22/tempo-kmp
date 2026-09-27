@@ -1,8 +1,8 @@
-package io.github.portfolio.tempo
+package io.github.kroha22.tempo
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
-import io.github.portfolio.tempo.ui.TempoApp
+import io.github.kroha22.tempo.ui.TempoApp
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {

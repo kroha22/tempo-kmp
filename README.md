@@ -1,10 +1,10 @@
 # Tempo Demo
 
-**A mobile-first European Portuguese learning prototype built with Kotlin Multiplatform and shared Compose UI.**
+**A mobile-first European Portuguese learning app built with Kotlin Multiplatform and shared Compose UI.**
 
 [Open the web demo](https://tempo-kmp-demo.olga-kroha22.chatgpt.site) · Android · iOS · WebAssembly
 
-> The hosted demo currently uses owner-only access through ChatGPT Sites. The application itself is a lightweight portfolio prototype: no account, backend, or personal data is included.
+> The hosted demo currently uses owner-only access through ChatGPT Sites. The application is a lightweight product demo: no account, backend, or personal data is included.
 
 Tempo Demo explores how one learning experience can run across Android, iOS, and the web without duplicating product logic or interface code. It combines short guided lessons, a reusable card flow, and two visual presentations over the same language content and accepted answers.
 
@@ -20,15 +20,18 @@ Tempo Demo explores how one learning experience can run across Android, iOS, and
 
 ## What is included
 
-- A compact route with three European Portuguese lessons.
+- The first A1.1 route: six European Portuguese lessons and the “New room” checkpoint.
 - Adult and child presentations backed by the same state and learning rules.
-- Lesson examples, a Can-Do goal, a single-choice self-check, and completion progress.
-- A six-card review flow with flip, save, and next actions.
+- Typed meaning, example, vocabulary, activity, and summary blocks.
+- Can-Do goals, independent checks, completion results, and route progress.
+- Lesson-to-card saving and a review flow with flip, save, and next actions.
+- The complete built-in deck of 1,000 unique Portuguese infinitives with stable `v0001`–`v1000` IDs, frequency rank, and basic-verb marker.
+- Local progress persistence on Android and iOS.
 - Stable lesson and card identifiers in typed demo content.
 - Shared Compose UI and a pure Kotlin state reducer.
 - Thin Android, iOS, and WebAssembly hosts.
 
-The demo deliberately excludes the Books reader, the full 1,000-verb deck, accounts, cloud progress, and the larger production curriculum.
+The demo deliberately excludes the Books reader, accounts, cloud progress, spaced-repetition scheduling, and the larger production curriculum.
 
 ## Architecture
 
@@ -51,11 +54,11 @@ The shared reducer is intentionally independent from UI widgets. Switching betwe
 
 | Target | Current state | Verified |
 | --- | --- | --- |
-| Android | Runnable Compose application using the shared UI | Debug APK build |
-| iOS | SwiftUI host embedding the shared Compose controller | Full unsigned Simulator build |
-| Web | Kotlin/Wasm application using the same shared UI | Production bundle and mobile browser flow |
+| Android | Runnable Compose application using the shared UI and local progress | Previous baseline built; current lesson transfer awaiting verification |
+| iOS | SwiftUI host embedding the shared Compose controller and local progress | Previous baseline built; current lesson transfer awaiting verification |
+| Web | Kotlin/Wasm application using the same shared UI | Previous production bundle verified; current lesson transfer awaiting verification |
 
-This is a portfolio-ready functional prototype, not a store-ready release. State currently lives in memory and resets when the application restarts. Signing, distribution metadata, persistent progress, accessibility hardening, and device-level release QA remain future work.
+This is a functional product demo, not a store-ready release. Android and iOS keep completed lessons, results, presentation mode, and saved-card IDs locally. The web target still resets state when the page reloads. Accounts, cloud sync, signing, distribution metadata, accessibility hardening, and device-level release QA remain future work.
 
 ## Technology
 
@@ -72,15 +75,13 @@ Requirements: JDK 17+, Android SDK for Android builds, and Xcode for iOS builds.
 
 ### Web
 
-```bash
-./gradlew :webApp:wasmJsBrowserDevelopmentRun
-```
-
 Create the production web bundle:
 
 ```bash
 ./gradlew :webApp:wasmJsBrowserDistribution
 ```
+
+Serve the generated bundle locally from `webApp/build/dist/wasmJs/productionExecutable/` with any static HTTP server.
 
 ### Android
 
@@ -100,12 +101,16 @@ Open `iosApp/iosApp.xcodeproj` in Xcode and run the `iosApp` scheme on an Apple 
 ./gradlew :shared:iosSimulatorArm64Test
 ```
 
-The common tests cover presentation-state parity, navigation, card-session wrapping, reveal reset, and stable saved-card IDs.
+The common tests cover presentation-state parity, navigation, card-session wrapping, reveal reset, stable saved-card IDs, and the 1,000-verb deck contract.
+
+## Data attribution
+
+Verb frequency ordering is derived from Corpus do Português. Russian translations in the imported verb deck come from FreeDict `rus-por` and are distributed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). The deck is carried over from the main Tempo project without a new editorial review; frequency rank and translation remain separate fields.
 
 ## Current direction
 
-The next product step is to replace the small hard-coded demo pack with reusable lesson-block definitions, then port selected real Tempo lessons onto that shared model. Persistence and API integration should follow only after the lesson contract is stable.
+The next product step is to validate the transferred first route on Android and iOS devices, then decide whether the demo needs cloud progress or should remain local-only. Books and the full production curriculum remain outside this repository.
 
 ---
 
-Built as a focused cross-platform portfolio slice of the broader Tempo learning product.
+Built as a focused cross-platform slice of the broader Tempo learning product.

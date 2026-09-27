@@ -1,4 +1,4 @@
-rootProject.name = "tempo-kmp-portfolio"
+rootProject.name = "tempo-kmp"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

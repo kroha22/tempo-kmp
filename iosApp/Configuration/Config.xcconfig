@@ -1,4 +1,4 @@
 TEAM_ID=
-BUNDLE_ID=io.github.portfolio.tempo
+BUNDLE_ID=io.github.kroha22.tempo
 APP_NAME=Tempo Demo
 EXCLUDED_ARCHS[sdk=iphonesimulator*]=x86_64
