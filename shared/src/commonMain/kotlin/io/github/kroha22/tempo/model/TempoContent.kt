@@ -2,7 +2,7 @@ package io.github.kroha22.tempo.model
 
 enum class PresentationMode { Adult, Child }
 
-enum class RootArea { Learning, Cards }
+enum class RootArea { Learning, Words, Cards }
 
 data class Example(val portuguese: String, val russian: String)
 

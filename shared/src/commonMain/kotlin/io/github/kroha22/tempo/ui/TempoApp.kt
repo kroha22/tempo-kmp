@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -86,6 +88,7 @@ fun TempoApp(
                         dispatch = dispatch,
                     )
                     state.area == RootArea.Learning -> LearningScreen(state, dispatch)
+                    state.area == RootArea.Words -> WordsScreen()
                     else -> CardsScreen(state, dispatch)
                 }
             }
@@ -97,8 +100,8 @@ fun TempoApp(
 private fun TempoHeader(state: TempoState, dispatch: (TempoAction) -> Unit) {
     Surface(shadowElevation = 3.dp) {
         Column(
-            modifier = Modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.safeDrawing).padding(horizontal = 16.dp, vertical = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(9.dp),
+            modifier = Modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)).padding(horizontal = 12.dp, vertical = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("TEMPO", fontWeight = FontWeight.Black, letterSpacing = 2.sp, color = Green)
@@ -109,7 +112,8 @@ private fun TempoHeader(state: TempoState, dispatch: (TempoAction) -> Unit) {
             }
             if (state.selectedLessonId == null) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AreaButton("Обучение", state.area == RootArea.Learning) { dispatch(TempoAction.SelectArea(RootArea.Learning)) }
+                    AreaButton("Уроки", state.area == RootArea.Learning) { dispatch(TempoAction.SelectArea(RootArea.Learning)) }
+                    AreaButton("Слова", state.area == RootArea.Words) { dispatch(TempoAction.SelectArea(RootArea.Words)) }
                     AreaButton("Карточки", state.area == RootArea.Cards) { dispatch(TempoAction.SelectArea(RootArea.Cards)) }
                 }
             }
@@ -119,7 +123,7 @@ private fun TempoHeader(state: TempoState, dispatch: (TempoAction) -> Unit) {
 
 @Composable
 private fun ModeChip(label: String, selected: Boolean, onClick: () -> Unit) {
-    Surface(modifier = Modifier.size(42.dp).clickable(onClick = onClick), shape = CircleShape, color = if (selected) Green else GreenSoft) {
+    Surface(modifier = Modifier.size(44.dp).clickable(onClick = onClick), shape = CircleShape, color = if (selected) Green else GreenSoft) {
         Box(contentAlignment = Alignment.Center) {
             Text(label, color = if (selected) Color.White else Green, fontWeight = FontWeight.Black)
         }
@@ -129,7 +133,7 @@ private fun ModeChip(label: String, selected: Boolean, onClick: () -> Unit) {
 @Composable
 private fun RowScope.AreaButton(label: String, selected: Boolean, onClick: () -> Unit) {
     Surface(
-        modifier = Modifier.weight(1f).height(42.dp).clickable(onClick = onClick),
+        modifier = Modifier.weight(1f).height(44.dp).clickable(onClick = onClick),
         shape = RoundedCornerShape(20.dp),
         color = if (selected) Green else Color(0xFFF1EEE5),
     ) {
@@ -358,101 +362,5 @@ private fun androidx.compose.foundation.lazy.LazyListScope.summaryStage(
     item {
         Button(modifier = Modifier.fillMaxWidth().height(52.dp), onClick = { dispatch(TempoAction.CloseLesson) }) { Text("Вернуться к маршруту") }
         TextButton(modifier = Modifier.fillMaxWidth(), onClick = { dispatch(TempoAction.RestartLesson) }) { Text("Пройти урок ещё раз") }
-    }
-}
-
-@Composable
-private fun CardsScreen(state: TempoState, dispatch: (TempoAction) -> Unit) {
-    val verbsSelected = state.cardCollection == CardCollection.Verbs
-    val savedCards = demoCards.filter { it.id in state.savedCardIds }
-    val reviewCards = if (savedCards.isEmpty()) demoCards.take(6) else savedCards
-    val lessonCard = reviewCards[state.cardIndex % reviewCards.size]
-    val verbCard = verbDeck[state.cardIndex % verbDeck.size]
-    val saved = lessonCard.id in state.savedCardIds
-    Column(
-        modifier = Modifier.fillMaxSize().padding(start = 16.dp, top = 24.dp, end = 16.dp, bottom = 40.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text("КАРТОЧКИ", color = Green, fontSize = 11.sp, fontWeight = FontWeight.Black)
-        Text(if (verbsSelected) "1000 глаголов" else if (savedCards.isEmpty()) "Попробуйте карточки" else "Мои карточки", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Black)
-        Spacer(Modifier.height(12.dp))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(
-                modifier = Modifier.weight(1f),
-                selected = !verbsSelected,
-                onClick = { dispatch(TempoAction.SelectCardCollection(CardCollection.Lesson)) },
-                label = { Text("Из уроков") },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = Color.White,
-                    labelColor = Ink,
-                    selectedContainerColor = Green,
-                    selectedLabelColor = Color.White,
-                ),
-            )
-            FilterChip(
-                modifier = Modifier.weight(1f),
-                selected = verbsSelected,
-                onClick = { dispatch(TempoAction.SelectCardCollection(CardCollection.Verbs)) },
-                label = { Text("1000 глаголов") },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = Color.White,
-                    labelColor = Ink,
-                    selectedContainerColor = Green,
-                    selectedLabelColor = Color.White,
-                ),
-            )
-        }
-        Text(
-            if (verbsSelected) "№ ${verbCard.rank} из ${verbDeck.size}" else "${state.cardIndex % reviewCards.size + 1} из ${reviewCards.size} · сохранено ${state.savedCardIds.size}",
-            color = Muted,
-        )
-        Spacer(Modifier.height(24.dp))
-        Card(
-            modifier = Modifier.fillMaxWidth().height(320.dp).clickable { dispatch(TempoAction.FlipCard) },
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            shape = RoundedCornerShape(28.dp),
-        ) {
-            Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        if (verbsSelected) {
-                            if (verbCard.basic) "БАЗОВЫЙ ГЛАГОЛ · ${verbCard.id}" else "ГЛАГОЛ · ${verbCard.id}"
-                        } else lessonCard.label.uppercase(),
-                        color = Purple,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Black,
-                    )
-                    Text(
-                        if (verbsSelected) {
-                            if (state.cardRevealed) verbCard.translation else verbCard.infinitive
-                        } else {
-                            if (state.cardRevealed) lessonCard.russian else lessonCard.portuguese
-                        },
-                        textAlign = TextAlign.Center,
-                        fontSize = 31.sp,
-                        fontWeight = FontWeight.Black,
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    Text(
-                        if (verbsSelected) {
-                            if (state.cardRevealed) "№ ${verbCard.rank} по частоте" else "Нажмите, чтобы открыть перевод"
-                        } else {
-                            if (state.cardRevealed) lessonCard.example else "Нажмите, чтобы открыть перевод"
-                        },
-                        color = Muted,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-        }
-        Spacer(Modifier.height(16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            if (!verbsSelected) {
-                OutlinedButton(modifier = Modifier.weight(1f).height(50.dp), onClick = { dispatch(TempoAction.ToggleSavedCard(lessonCard.id)) }) {
-                    Text(if (saved) "Сохранено ✓" else "Сохранить")
-                }
-            }
-            Button(modifier = Modifier.weight(1f).height(50.dp), onClick = { dispatch(TempoAction.NextCard) }) { Text("Следующая →") }
-        }
     }
 }

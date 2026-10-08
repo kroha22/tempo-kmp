@@ -31,7 +31,11 @@ Tempo Demo explores how one learning experience can run across Android, iOS, and
 - Shared Compose UI and a pure Kotlin state reducer.
 - Thin Android, iOS, and WebAssembly hosts.
 
-The demo deliberately excludes the Books reader, accounts, cloud progress, spaced-repetition scheduling, and the larger production curriculum.
+The demo deliberately excludes the Books reader, accounts, cloud progress, and the larger production curriculum.
+
+### Native cards and words update
+
+The shared native UI now includes 14 word themes, the 351-word collection, eight classroom instruction cards, school phrase exercises, related short lessons and present-tense forms. Compact cards use side chevrons; ratings persist locally and affect verb review intervals. Audio is intentionally omitted. See [native update details and validation](docs/native-web-parity.md).
 
 ## Architecture
 

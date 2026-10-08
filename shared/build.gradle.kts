@@ -15,7 +15,7 @@ kotlin {
         }
     }
 
-    js { browser() }
+    js { browser(); nodejs() }
     wasmJs { browser() }
 
     androidLibrary {
